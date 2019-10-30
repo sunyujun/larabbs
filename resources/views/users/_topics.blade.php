@@ -7,8 +7,8 @@
                     {{ $topic->title }}
                 </a>
                 <span class="meta float-right text-secondary">
-          {{ $topic->reply_count }} »Ø¸´
-          <span> ? </span>
+          {{ $topic->reply_count }} å›å¤
+          <span> â‹… </span>
           {{ $topic->created_at->diffForHumans() }}
         </span>
             </li>
@@ -16,10 +16,10 @@
     </ul>
 
 @else
-    <div class="empty-block">ÔİÎŞÊı¾İ ~_~ </div>
+    <div class="empty-block">æš‚æ— æ•°æ® ~_~ </div>
 @endif
 
-{{-- ·ÖÒ³ --}}
+{{-- åˆ†é¡µ --}}
 <div class="mt-4 pt-1">
     {!! $topics->render() !!}
 </div>
