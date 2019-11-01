@@ -135,4 +135,16 @@ body {
   }
 }
 
+/* »Ø¸´ÁÐ±í */
+
+.topic-reply {
+  a {
+    color: inherit;
+  }
+
+  .meta {
+    font-size: .9em;
+    color: #b3b3b3;
+  }
+}
 @import "~highlight.js/styles/agate.css";
