@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Reply;
 
-class TopicReplied extends Notification
+class TopicReplied extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,22 +16,31 @@ class TopicReplied extends Notification
 
     public function __construct(Reply $reply)
     {
-        // ×¢Èë»Ø¸´ÊµÌå£¬·½±ã toDatabase ·½·¨ÖĞµÄÊ¹ÓÃ
+        // æ³¨å…¥å›å¤å®ä½“ï¼Œæ–¹ä¾¿ toDatabase æ–¹æ³•ä¸­çš„ä½¿ç”¨
         $this->reply = $reply;
     }
 
     public function via($notifiable)
     {
-        // ¿ªÆôÍ¨ÖªµÄÆµµÀ
-        return ['database'];
+        // å¼€å¯é€šçŸ¥çš„é¢‘é“
+        return ['database', 'mail'];
     }
 
+    public function toMail($notifiable)
+    {
+        $url = $this->reply->topic->link(['#reply' . $this->reply->id]);
+
+        return (new MailMessage)
+            ->line('ä½ çš„è¯é¢˜æœ‰æ–°å›å¤ï¼')
+            ->action('æŸ¥çœ‹å›å¤', $url);
+    }
+    
     public function toDatabase($notifiable)
     {
         $topic = $this->reply->topic;
         $link =  $topic->link(['#reply' . $this->reply->id]);
 
-        // ´æÈëÊı¾İ¿âÀïµÄÊı¾İ
+        // å­˜å…¥æ•°æ®åº“é‡Œçš„æ•°æ®
         return [
             'reply_id' => $this->reply->id,
             'reply_content' => $this->reply->content,
