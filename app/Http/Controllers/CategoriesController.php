@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Topic;
 use App\Models\Category;
+use App\Models\User;
 
 class CategoriesController extends Controller
 {
-    public function show(Category $category, Request $request, Topic $topic)
+    public function show(Category $category, Request $request, Topic $topic, User $user)
     {
-        // ¶ÁÈ¡·ÖÀà ID ¹ØÁªµÄ»°Ìâ£¬²¢°´Ã¿ 20 Ìõ·ÖÒ³
+        // è¯»å–åˆ†ç±» ID å…³è”çš„è¯é¢˜ï¼Œå¹¶æŒ‰æ¯ 20 æ¡åˆ†é¡µ
         $topics = $topic->withOrder($request->order)
-            ->where('category_id', $category->id)
-            ->with('user', 'category')   // Ô¤¼ÓÔØ·ÀÖ¹ N+1 ÎÊÌâ
-            ->paginate(20);
+                        ->where('category_id', $category->id)
+                        ->with('user', 'category')   // é¢„åŠ è½½é˜²æ­¢ N+1 é—®é¢˜
+                        ->paginate(20);
+        // æ´»è·ƒç”¨æˆ·åˆ—è¡¨
+        $active_users = $user->getActiveUsers();
 
-        // ´«²Î±äÁ¿»°ÌâºÍ·ÖÀàµ½Ä£°åÖĞ
-        return view('topics.index', compact('topics', 'category'));
+        // ä¼ å‚å˜é‡è¯é¢˜å’Œåˆ†ç±»åˆ°æ¨¡æ¿ä¸­
+        return view('topics.index', compact('topics', 'category', 'active_users'));
     }
 }
